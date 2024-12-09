@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 750px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "orange", "id": "B004LOJPLQ", "label": "B004LOJPLQ", "shape": "dot"}, {"color": "orange", "id": "B009NSXYQC", "label": "B009NSXYQC", "shape": "dot"}, {"color": "orange", "id": "B004P8R9O8", "label": "B004P8R9O8", "shape": "dot"}, {"color": "orange", "id": "6300183580", "label": "6300183580", "shape": "dot"}, {"color": "orange", "id": "B005DJGMQE", "label": "B005DJGMQE", "shape": "dot"}, {"color": "orange", "id": "B005ADQVX2", "label": "B005ADQVX2", "shape": "dot"}, {"color": "skyblue", "id": "A4LB338UB3GRN", "label": "A4LB338UB3GRN", "shape": "dot"}, {"color": "orange", "id": "B000062XI7", "label": "B000062XI7", "shape": "dot"}, {"color": "orange", "id": "B004P8R9KC", "label": "B004P8R9KC", "shape": "dot"}, {"color": "orange", "id": "B005DD7MH8", "label": "B005DD7MH8", "shape": "dot"}, {"color": "orange", "id": "B0001F7UOI", "label": "B0001F7UOI", "shape": "dot"}, {"color": "orange", "id": "B005II5I6K", "label": "B005II5I6K", "shape": "dot"}, {"color": "orange", "id": "B004QL7JYO", "label": "B004QL7JYO", "shape": "dot"}, {"color": "orange", "id": "B005HP2JAM", "label": "B005HP2JAM", "shape": "dot"}, {"color": "skyblue", "id": "AI5LWV8PCCWCZ", "label": "AI5LWV8PCCWCZ", "shape": "dot"}, {"color": "orange", "id": "B005CHTXY0", "label": "B005CHTXY0", "shape": "dot"}, {"color": "orange", "id": "B0051MKNV8", "label": "B0051MKNV8", "shape": "dot"}, {"color": "orange", "id": "B005XBKWCW", "label": "B005XBKWCW", "shape": "dot"}, {"color": "orange", "id": "B004LWZVZM", "label": "B004LWZVZM", "shape": "dot"}, {"color": "orange", "id": "B005OHNSKS", "label": "B005OHNSKS", "shape": "dot"}, {"color": "orange", "id": "B0051PLR3S", "label": "B0051PLR3S", "shape": "dot"}, {"color": "orange", "id": "B0051CSIL0", "label": "B0051CSIL0", "shape": "dot"}, {"color": "orange", "id": "B000T46O0W", "label": "B000T46O0W", "shape": "dot"}, {"color": "skyblue", "id": "A3APW42N5MRVWT", "label": "A3APW42N5MRVWT", "shape": "dot"}, {"color": "skyblue", "id": "A1I5O6LSW96XTB", "label": "A1I5O6LSW96XTB", "shape": "dot"}, {"color": "orange", "id": "B00004TJKA", "label": "B00004TJKA", "shape": "dot"}, {"color": "orange", "id": "B0053WQE6O", "label": "B0053WQE6O", "shape": "dot"}, {"color": "orange", "id": "B005WV5G2O", "label": "B005WV5G2O", "shape": "dot"}, {"color": "orange", "id": "B0057IAPBO", "label": "B0057IAPBO", "shape": "dot"}, {"color": "orange", "id": "B0058ZPMYG", "label": "B0058ZPMYG", "shape": "dot"}, {"color": "orange", "id": "B004XQO8LY", "label": "B004XQO8LY", "shape": "dot"}, {"color": "orange", "id": "B004ZBFRRG", "label": "B004ZBFRRG", "shape": "dot"}, {"color": "orange", "id": "B0008JIJ2O", "label": "B0008JIJ2O", "shape": "dot"}, {"color": "orange", "id": "B000ELL1QW", "label": "B000ELL1QW", "shape": "dot"}, {"color": "orange", "id": "B00004CK3G", "label": "B00004CK3G", "shape": "dot"}, {"color": "orange", "id": "B000SP1SF8", "label": "B000SP1SF8", "shape": "dot"}, {"color": "skyblue", "id": "A14QC0VV8E3O9M", "label": "A14QC0VV8E3O9M", "shape": "dot"}, {"color": "orange", "id": "B004EPZ0BQ", "label": "B004EPZ0BQ", "shape": "dot"}, {"color": "orange", "id": "B005FJ7DOM", "label": "B005FJ7DOM", "shape": "dot"}, {"color": "orange", "id": "B005EPFA8I", "label": "B005EPFA8I", "shape": "dot"}, {"color": "orange", "id": "B005MMYCY6", "label": "B005MMYCY6", "shape": "dot"}, {"color": "orange", "id": "B00669FHX4", "label": "B00669FHX4", "shape": "dot"}, {"color": "orange", "id": "B004O8OLNQ", "label": "B004O8OLNQ", "shape": "dot"}, {"color": "skyblue", "id": "A25EZBC0D0J2XN", "label": "A25EZBC0D0J2XN", "shape": "dot"}, {"color": "orange", "id": "B00004S164", "label": "B00004S164", "shape": "dot"}, {"color": "orange", "id": "B0041KKYHO", "label": "B0041KKYHO", "shape": "dot"}, {"color": "orange", "id": "B0055CP9BI", "label": "B0055CP9BI", "shape": "dot"}, {"color": "orange", "id": "B004LWZVZC", "label": "B004LWZVZC", "shape": "dot"}, {"color": "orange", "id": "B000ECX0O2", "label": "B000ECX0O2", "shape": "dot"}, {"color": "orange", "id": "B005FJ7F7M", "label": "B005FJ7F7M", "shape": "dot"}, {"color": "orange", "id": "B003UD7IZO", "label": "B003UD7IZO", "shape": "dot"}, {"color": "orange", "id": "B004P8R9IO", "label": "B004P8R9IO", "shape": "dot"}, {"color": "orange", "id": "6305674051", "label": "6305674051", "shape": "dot"}, {"color": "orange", "id": "B0051CSI0G", "label": "B0051CSI0G", "shape": "dot"}, {"color": "skyblue", "id": "A28BNBO4HFYATP", "label": "A28BNBO4HFYATP", "shape": "dot"}, {"color": "orange", "id": "B005EJN63A", "label": "B005EJN63A", "shape": "dot"}, {"color": "orange", "id": "B003VWO4QU", "label": "B003VWO4QU", "shape": "dot"}, {"color": "skyblue", "id": "ATL0PWRII3CO", "label": "ATL0PWRII3CO", "shape": "dot"}, {"color": "orange", "id": "B005N4L0ES", "label": "B005N4L0ES", "shape": "dot"}, {"color": "orange", "id": "B00005EAX9", "label": "B00005EAX9", "shape": "dot"}, {"color": "orange", "id": "B003WKL6XA", "label": "B003WKL6XA", "shape": "dot"}, {"color": "orange", "id": "B0055CP9EK", "label": "B0055CP9EK", "shape": "dot"}, {"color": "orange", "id": "B00579YI1G", "label": "B00579YI1G", "shape": "dot"}, {"color": "orange", "id": "B00124EL9O", "label": "B00124EL9O", "shape": "dot"}, {"color": "orange", "id": "B004EPZ0BG", "label": "B004EPZ0BG", "shape": "dot"}, {"color": "orange", "id": "B0051PLR4W", "label": "B0051PLR4W", "shape": "dot"}, {"color": "orange", "id": "B000055Y11", "label": "B000055Y11", "shape": "dot"}, {"color": "orange", "id": "B005J9ZDZO", "label": "B005J9ZDZO", "shape": "dot"}, {"color": "orange", "id": "B0051CSIKQ", "label": "B0051CSIKQ", "shape": "dot"}, {"color": "orange", "id": "B005J7K9H8", "label": "B005J7K9H8", "shape": "dot"}, {"color": "orange", "id": "B0056BU3I2", "label": "B0056BU3I2", "shape": "dot"}, {"color": "orange", "id": "B0053WQE78", "label": "B0053WQE78", "shape": "dot"}, {"color": "orange", "id": "B005HP2J66", "label": "B005HP2J66", "shape": "dot"}, {"color": "orange", "id": "B004P8R9NE", "label": "B004P8R9NE", "shape": "dot"}, {"color": "orange", "id": "B0050I976U", "label": "B0050I976U", "shape": "dot"}, {"color": "orange", "id": "B00004VYGE", "label": "B00004VYGE", "shape": "dot"}, {"color": "orange", "id": "B004XQO8O6", "label": "B004XQO8O6", "shape": "dot"}, {"color": "orange", "id": "B003WKL6X0", "label": "B003WKL6X0", "shape": "dot"}, {"color": "orange", "id": "B002RPR6NU", "label": "B002RPR6NU", "shape": "dot"}, {"color": "orange", "id": "B004XQO8PK", "label": "B004XQO8PK", "shape": "dot"}, {"color": "orange", "id": "B004UP3D8M", "label": "B004UP3D8M", "shape": "dot"}, {"color": "orange", "id": "B0087ZG7KM", "label": "B0087ZG7KM", "shape": "dot"}, {"color": "orange", "id": "7799129883", "label": "7799129883", "shape": "dot"}, {"color": "orange", "id": "B004EPYZQM", "label": "B004EPYZQM", "shape": "dot"}, {"color": "orange", "id": "B004QL7JYY", "label": "B004QL7JYY", "shape": "dot"}, {"color": "orange", "id": "B004EPYZQC", "label": "B004EPYZQC", "shape": "dot"}, {"color": "orange", "id": "B003UESJHO", "label": "B003UESJHO", "shape": "dot"}, {"color": "skyblue", "id": "A1Z9JJN43A5T3W", "label": "A1Z9JJN43A5T3W", "shape": "dot"}, {"color": "orange", "id": "B004O8OLO0", "label": "B004O8OLO0", "shape": "dot"}, {"color": "orange", "id": "B00004RNN9", "label": "B00004RNN9", "shape": "dot"}, {"color": "orange", "id": "B0053Y7T1G", "label": "B0053Y7T1G", "shape": "dot"}, {"color": "orange", "id": "B00004CPEL", "label": "B00004CPEL", "shape": "dot"}, {"color": "orange", "id": "B004VTLO9M", "label": "B004VTLO9M", "shape": "dot"}, {"color": "orange", "id": "B005N4L692", "label": "B005N4L692", "shape": "dot"}, {"color": "orange", "id": "B0051MKMNC", "label": "B0051MKMNC", "shape": "dot"}, {"color": "orange", "id": "B0062A5TLM", "label": "B0062A5TLM", "shape": "dot"}, {"color": "orange", "id": "B005ISQEF4", "label": "B005ISQEF4", "shape": "dot"}, {"color": "orange", "id": "B00005JM8V", "label": "B00005JM8V", "shape": "dot"}, {"color": "orange", "id": "B005COPWZW", "label": "B005COPWZW", "shape": "dot"}, {"color": "orange", "id": "B000KB8DB2", "label": "B000KB8DB2", "shape": "dot"}, {"color": "skyblue", "id": "A10G0IO6GT9YKY", "label": "A10G0IO6GT9YKY", "shape": "dot"}, {"color": "orange", "id": "B0051CSICY", "label": "B0051CSICY", "shape": "dot"}, {"color": "orange", "id": "B004Q0CHB0", "label": "B004Q0CHB0", "shape": "dot"}, {"color": "orange", "id": "B005DD7H50", "label": "B005DD7H50", "shape": "dot"}, {"color": "orange", "id": "B004A8ZWUQ", "label": "B004A8ZWUQ", "shape": "dot"}, {"color": "orange", "id": "B00650SSDU", "label": "B00650SSDU", "shape": "dot"}, {"color": "orange", "id": "B005PHTSTC", "label": "B005PHTSTC", "shape": "dot"}, {"color": "skyblue", "id": "A10QHNEGOIDK9V", "label": "A10QHNEGOIDK9V", "shape": "dot"}, {"color": "orange", "id": "B0041KKYHE", "label": "B0041KKYHE", "shape": "dot"}, {"color": "orange", "id": "B004ZBFRN0", "label": "B004ZBFRN0", "shape": "dot"}, {"color": "orange", "id": "B003UESJHY", "label": "B003UESJHY", "shape": "dot"}, {"color": "orange", "id": "B0087ZG7VG", "label": "B0087ZG7VG", "shape": "dot"}, {"color": "orange", "id": "0767817753", "label": "0767817753", "shape": "dot"}, {"color": "orange", "id": "6302800412", "label": "6302800412", "shape": "dot"}, {"color": "orange", "id": "B0056IXS7S", "label": "B0056IXS7S", "shape": "dot"}, {"color": "orange", "id": "B005HIEFC4", "label": "B005HIEFC4", "shape": "dot"}, {"color": "skyblue", "id": "A3GFWSB3VUEG20", "label": "A3GFWSB3VUEG20", "shape": "dot"}, {"color": "orange", "id": "B0007LFPT8", "label": "B0007LFPT8", "shape": "dot"}, {"color": "orange", "id": "B0058ZPNOK", "label": "B0058ZPNOK", "shape": "dot"}, {"color": "orange", "id": "B008XCZ43A", "label": "B008XCZ43A", "shape": "dot"}, {"color": "orange", "id": "B004XZ99AK", "label": "B004XZ99AK", "shape": "dot"}, {"color": "orange", "id": "B005EJN90K", "label": "B005EJN90K", "shape": "dot"}, {"color": "orange", "id": "0783236336", "label": "0783236336", "shape": "dot"}, {"color": "orange", "id": "B00466HN7M", "label": "B00466HN7M", "shape": "dot"}, {"color": "orange", "id": "B0054K8O36", "label": "B0054K8O36", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"from": "B004LOJPLQ", "title": "Score: 3.0", "to": "AI5LWV8PCCWCZ"}, {"from": "B009NSXYQC", "title": "Score: 3.0", "to": "A3APW42N5MRVWT"}, {"from": "B004P8R9O8", "title": "Score: 4.0", "to": "A3APW42N5MRVWT"}, {"from": "6300183580", "title": "Score: 4.0", "to": "A3APW42N5MRVWT"}, {"from": "B005DJGMQE", "title": "Score: 4.0", "to": "A3APW42N5MRVWT"}, {"from": "B005ADQVX2", "title": "Score: 3.0", "to": "A3APW42N5MRVWT"}, {"from": "A4LB338UB3GRN", "title": "Score: 3.0", "to": "B0087ZG7VG"}, {"from": "A4LB338UB3GRN", "title": "Score: 3.0", "to": "B0087ZG7KM"}, {"from": "A4LB338UB3GRN", "title": "Score: 3.0", "to": "B0056IXS7S"}, {"from": "A4LB338UB3GRN", "title": "Score: 3.0", "to": "B005CHTXY0"}, {"from": "A4LB338UB3GRN", "title": "Score: 3.0", "to": "B00466HN7M"}, {"from": "B000062XI7", "title": "Score: 3.0", "to": "A3APW42N5MRVWT"}, {"from": "B004P8R9KC", "title": "Score: 4.0", "to": "A3APW42N5MRVWT"}, {"from": "B005DD7MH8", "title": "Score: 4.0", "to": "A3GFWSB3VUEG20"}, {"from": "B005DD7MH8", "title": "Score: 3.0", "to": "A3APW42N5MRVWT"}, {"from": "B0001F7UOI", "title": "Score: 3.0", "to": "A3APW42N5MRVWT"}, {"from": "B005II5I6K", "title": "Score: 4.0", "to": "A3APW42N5MRVWT"}, {"from": "B004QL7JYO", "title": "Score: 4.0", "to": "A3APW42N5MRVWT"}, {"from": "B005HP2JAM", "title": "Score: 4.0", "to": "A3APW42N5MRVWT"}, {"from": "AI5LWV8PCCWCZ", "title": "Score: 4.0", "to": "B0056IXS7S"}, {"from": "AI5LWV8PCCWCZ", "title": "Score: 3.0", "to": "B003UESJHY"}, {"from": "AI5LWV8PCCWCZ", "title": "Score: 4.0", "to": "B0087ZG7VG"}, {"from": "AI5LWV8PCCWCZ", "title": "Score: 4.0", "to": "B0062A5TLM"}, {"from": "AI5LWV8PCCWCZ", "title": "Score: 3.0", "to": "B003UESJHO"}, {"from": "AI5LWV8PCCWCZ", "title": "Score: 4.0", "to": "B0087ZG7KM"}, {"from": "AI5LWV8PCCWCZ", "title": "Score: 4.0", "to": "B005CHTXY0"}, {"from": "AI5LWV8PCCWCZ", "title": "Score: 4.0", "to": "B0041KKYHE"}, {"from": "AI5LWV8PCCWCZ", "title": "Score: 4.0", "to": "B0041KKYHO"}, {"from": "AI5LWV8PCCWCZ", "title": "Score: 4.0", "to": "B00466HN7M"}, {"from": "B005CHTXY0", "title": "Score: 1.0", "to": "A1Z9JJN43A5T3W"}, {"from": "B005CHTXY0", "title": "Score: 5.0", "to": "ATL0PWRII3CO"}, {"from": "B005CHTXY0", "title": "Score: 5.0", "to": "A14QC0VV8E3O9M"}, {"from": "B0051MKNV8", "title": "Score: 3.0", "to": "A3APW42N5MRVWT"}, {"from": "B0051MKNV8", "title": "Score: 4.0", "to": "A3GFWSB3VUEG20"}, {"from": "B005XBKWCW", "title": "Score: 3.0", "to": "A28BNBO4HFYATP"}, {"from": "B005XBKWCW", "title": "Score: 2.0", "to": "A1I5O6LSW96XTB"}, {"from": "B005XBKWCW", "title": "Score: 4.0", "to": "A3APW42N5MRVWT"}, {"from": "B004LWZVZM", "title": "Score: 4.0", "to": "A3APW42N5MRVWT"}, {"from": "B005OHNSKS", "title": "Score: 3.0", "to": "A3APW42N5MRVWT"}, {"from": "B0051PLR3S", "title": "Score: 3.0", "to": "A3APW42N5MRVWT"}, {"from": "B0051CSIL0", "title": "Score: 4.0", "to": "A3APW42N5MRVWT"}, {"from": "B000T46O0W", "title": "Score: 4.0", "to": "A3APW42N5MRVWT"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B000KB8DB2"}, {"from": "A3APW42N5MRVWT", "title": "Score: 2.0", "to": "B0053WQE6O"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B005FJ7DOM"}, {"from": "A3APW42N5MRVWT", "title": "Score: 5.0", "to": "B0050I976U"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "7799129883"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B005J7K9H8"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B00004CPEL"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B0051PLR4W"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B0051CSI0G"}, {"from": "A3APW42N5MRVWT", "title": "Score: 5.0", "to": "B005EJN90K"}, {"from": "A3APW42N5MRVWT", "title": "Score: 2.0", "to": "B004XZ99AK"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B00579YI1G"}, {"from": "A3APW42N5MRVWT", "title": "Score: 2.0", "to": "B0007LFPT8"}, {"from": "A3APW42N5MRVWT", "title": "Score: 5.0", "to": "B005EJN63A"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B005DD7H50"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B005MMYCY6"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B005N4L0ES"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B00669FHX4"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B0056BU3I2"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B000ELL1QW"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B0055CP9BI"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B005EPFA8I"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B0062A5TLM"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B000SP1SF8"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B004XQO8LY"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B004UP3D8M"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B000055Y11"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B004ZBFRRG"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B0054K8O36"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B0053Y7T1G"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B00004S164"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B0051MKMNC"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B0058ZPNOK"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B005J9ZDZO"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B005ISQEF4"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B004VTLO9M"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B004QL7JYY"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B0057IAPBO"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "0767817753"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B005COPWZW"}, {"from": "A3APW42N5MRVWT", "title": "Score: 5.0", "to": "B0051CSICY"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "6305674051"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B00005JM8V"}, {"from": "A3APW42N5MRVWT", "title": "Score: 5.0", "to": "B004O8OLO0"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B00124EL9O"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "0783236336"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B004LWZVZC"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B005FJ7F7M"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B000ECX0O2"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B005N4L692"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B0055CP9EK"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B004P8R9NE"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B004XQO8O6"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B00005EAX9"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B004EPYZQM"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B004EPYZQC"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B00004VYGE"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B00004CK3G"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B00004RNN9"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B005WV5G2O"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B008XCZ43A"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B002RPR6NU"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B004P8R9IO"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B00004TJKA"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B005HP2J66"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B005PHTSTC"}, {"from": "A3APW42N5MRVWT", "title": "Score: 2.0", "to": "B003WKL6X0"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B0051CSIKQ"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B004ZBFRN0"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B004XQO8PK"}, {"from": "A3APW42N5MRVWT", "title": "Score: 2.0", "to": "B003WKL6XA"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B003VWO4QU"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "6302800412"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B004A8ZWUQ"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B0008JIJ2O"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B0058ZPMYG"}, {"from": "A3APW42N5MRVWT", "title": "Score: 5.0", "to": "B004O8OLNQ"}, {"from": "A3APW42N5MRVWT", "title": "Score: 2.0", "to": "B0053WQE78"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B0041KKYHE"}, {"from": "A3APW42N5MRVWT", "title": "Score: 4.0", "to": "B0041KKYHO"}, {"from": "A3APW42N5MRVWT", "title": "Score: 3.0", "to": "B004Q0CHB0"}, {"from": "A1I5O6LSW96XTB", "title": "Score: 2.0", "to": "7799129883"}, {"from": "A1I5O6LSW96XTB", "title": "Score: 2.0", "to": "B00650SSDU"}, {"from": "A1I5O6LSW96XTB", "title": "Score: 2.0", "to": "B0054K8O36"}, {"from": "A1I5O6LSW96XTB", "title": "Score: 2.0", "to": "B0053Y7T1G"}, {"from": "A1I5O6LSW96XTB", "title": "Score: 2.0", "to": "B005COPWZW"}, {"from": "A1I5O6LSW96XTB", "title": "Score: 2.0", "to": "B005HIEFC4"}, {"from": "A1I5O6LSW96XTB", "title": "Score: 2.0", "to": "B005WV5G2O"}, {"from": "A1I5O6LSW96XTB", "title": "Score: 2.0", "to": "B004EPZ0BG"}, {"from": "A1I5O6LSW96XTB", "title": "Score: 2.0", "to": "B004EPZ0BQ"}, {"from": "A1I5O6LSW96XTB", "title": "Score: 2.0", "to": "B004A8ZWUQ"}, {"from": "A1I5O6LSW96XTB", "title": "Score: 2.0", "to": "B003UD7IZO"}, {"from": "B005WV5G2O", "title": "Score: 3.0", "to": "A28BNBO4HFYATP"}, {"from": "A14QC0VV8E3O9M", "title": "Score: 5.0", "to": "B0056IXS7S"}, {"from": "A14QC0VV8E3O9M", "title": "Score: 5.0", "to": "B0087ZG7VG"}, {"from": "A14QC0VV8E3O9M", "title": "Score: 5.0", "to": "B0087ZG7KM"}, {"from": "A14QC0VV8E3O9M", "title": "Score: 5.0", "to": "B00466HN7M"}, {"from": "B004EPZ0BQ", "title": "Score: 5.0", "to": "A10G0IO6GT9YKY"}, {"from": "B00669FHX4", "title": "Score: 2.0", "to": "A25EZBC0D0J2XN"}, {"from": "A25EZBC0D0J2XN", "title": "Score: 2.0", "to": "B0056BU3I2"}, {"from": "A25EZBC0D0J2XN", "title": "Score: 2.0", "to": "B004EPYZQM"}, {"from": "A25EZBC0D0J2XN", "title": "Score: 2.0", "to": "B004EPYZQC"}, {"from": "B0041KKYHO", "title": "Score: 4.0", "to": "A10QHNEGOIDK9V"}, {"from": "B003UD7IZO", "title": "Score: 5.0", "to": "A10G0IO6GT9YKY"}, {"from": "A28BNBO4HFYATP", "title": "Score: 3.0", "to": "7799129883"}, {"from": "A28BNBO4HFYATP", "title": "Score: 3.0", "to": "B0054K8O36"}, {"from": "A28BNBO4HFYATP", "title": "Score: 3.0", "to": "B0053Y7T1G"}, {"from": "A28BNBO4HFYATP", "title": "Score: 3.0", "to": "B005COPWZW"}, {"from": "A28BNBO4HFYATP", "title": "Score: 3.0", "to": "B004A8ZWUQ"}, {"from": "ATL0PWRII3CO", "title": "Score: 5.0", "to": "B0087ZG7VG"}, {"from": "ATL0PWRII3CO", "title": "Score: 5.0", "to": "B0056IXS7S"}, {"from": "ATL0PWRII3CO", "title": "Score: 5.0", "to": "B0087ZG7KM"}, {"from": "ATL0PWRII3CO", "title": "Score: 5.0", "to": "B00466HN7M"}, {"from": "B004EPZ0BG", "title": "Score: 5.0", "to": "A10G0IO6GT9YKY"}, {"from": "B0087ZG7KM", "title": "Score: 1.0", "to": "A1Z9JJN43A5T3W"}, {"from": "A1Z9JJN43A5T3W", "title": "Score: 1.0", "to": "B0087ZG7VG"}, {"from": "A1Z9JJN43A5T3W", "title": "Score: 1.0", "to": "B0056IXS7S"}, {"from": "A1Z9JJN43A5T3W", "title": "Score: 1.0", "to": "B00466HN7M"}, {"from": "B0051MKMNC", "title": "Score: 4.0", "to": "A3GFWSB3VUEG20"}, {"from": "B0062A5TLM", "title": "Score: 4.0", "to": "A10QHNEGOIDK9V"}, {"from": "A10G0IO6GT9YKY", "title": "Score: 5.0", "to": "B00650SSDU"}, {"from": "A10G0IO6GT9YKY", "title": "Score: 5.0", "to": "B005HIEFC4"}, {"from": "B005DD7H50", "title": "Score: 4.0", "to": "A3GFWSB3VUEG20"}, {"from": "A10QHNEGOIDK9V", "title": "Score: 4.0", "to": "B0041KKYHE"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

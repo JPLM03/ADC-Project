@@ -4,3 +4,4 @@ movies.parquet
 movies_light.txt
 movies_max_help.parquet
 /env
+/lib
